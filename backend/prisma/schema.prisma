@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      String   // EXECUTOR, REVIEWER, REQUESTER
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  workflows Workflow[]
+  auditLogs WorkflowAuditLog[]
+}
+
+model Workflow {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  status      String   @default("DRAFT") // DRAFT, SUBMITTED, APPROVED, REJECTED, EXECUTED
+  requesterId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  stepStartTime DateTime @default(now())
+  isEscalated Boolean  @default(false)
+  webhookUrl   String?
+
+  requester   User     @relation(fields: [requesterId], references: [id])
+  template    WorkflowTemplate? @relation(fields: [templateId], references: [id])
+  auditLogs   WorkflowAuditLog[]
+  webhookLogs WebhookLog[]
+  templateId  String?
+  currentStep Int      @default(0)
+}
+
+model WebhookLog {
+  id          String   @id @default(uuid())
+  workflowId  String
+  url         String
+  event       String
+  payload     String
+  status      String   @default("PENDING") // PENDING, SUCCESS, FAILED, ABORTED
+  attempt     Int      @default(0)
+  nextRetry   DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workflow    Workflow @relation(fields: [workflowId], references: [id])
+}
+
+model WorkflowTemplate {
+  id        String   @id @default(uuid())
+  name      String
+  steps     String   // JSON string of steps equivalent to Step[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  workflows Workflow[]
+}
+
+model WorkflowAuditLog {
+  id              String   @id @default(uuid())
+  workflowId      String
+  action          String   // CREATE, SUBMIT, APPROVE, REJECT, EXECUTE
+  fromStatus      String?
+  toStatus        String
+  performedByEmail String
+  performedByRole String
+  comment         String?
+  stepIndex       Int?
+  timestamp       DateTime @default(now())
+
+  workflow        Workflow @relation(fields: [workflowId], references: [id])
+  actor           User?    @relation(fields: [performedByEmail], references: [email])
+}
+
+model SystemLog {
+  id          String   @id @default(uuid())
+  timestamp   DateTime @default(now())
+  eventType   String
+  actorEmail  String?
+  actorRole   String
+  workflowId  String?
+  status      String   // SUCCESS, FAILURE, INFO
+  message     String
+  metadata    String?  // JSON string
+}
