@@ -126,6 +126,17 @@ The project is deployed on **Vercel** with:
 
 No SQLite or local storage is used in production.
 
+### Access Credentials (Demo)
+
+The following users were automatically seeded for demonstration purposes:
+
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Requester** | `requester@test.com` | `password123` |
+| **Reviewer** | `reviewer@test.com` | `password123` |
+| **Executor** | `executor@test.com` | `password123` |
+| **Admin** | `admin@test.com` | `password123` |
+
 ---
 
 ## 📌 Design Philosophy
