@@ -56,6 +56,25 @@ export default function LoginPage() {
             <div style={{ marginTop: 20, textAlign: 'center' }}>
                 <a href="/about" style={{ color: '#0070f3', textDecoration: 'none' }}>About Regula</a>
             </div>
+            <div style={{ marginTop: 15, textAlign: 'center' }}>
+                <a
+                    href="https://corevialabs.vercel.app/request-demo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        display: 'inline-block',
+                        padding: '10px 20px',
+                        backgroundColor: '#28a745',
+                        color: 'white',
+                        textDecoration: 'none',
+                        borderRadius: 6,
+                        fontWeight: 500,
+                        fontSize: '0.9em'
+                    }}
+                >
+                    Request Demo Credentials
+                </a>
+            </div>
         </div>
     );
 }
