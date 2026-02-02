@@ -26,7 +26,8 @@ export default function LoginPage() {
     };
 
     return (
-        <div style={{ maxWidth: 400, margin: '50px auto' }}>
+        <div style={{ maxWidth: 400, margin: '50px auto', textAlign: 'center' }}>
+            <img src="/logo.png" alt="Regula Logo" style={{ width: 120, height: 'auto', marginBottom: 20 }} />
             <h1>Login - Regula</h1>
             {error && <div className="error">{error}</div>}
             <form onSubmit={handleLogin}>
